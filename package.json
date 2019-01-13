@@ -1,0 +1,43 @@
+{
+  "name": "beer-table",
+  "version": "0.1.0",
+  "description": "MUI Tables for Beer Garden",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loganasherjones/beer-table.git"
+  },
+  "keywords": [
+    "material-ui",
+    "react",
+    "beer-garden",
+    "table"
+  ],
+  "author": "Logan Asher Jones",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/loganasherjones/beer-table/issues"
+  },
+  "homepage": "https://github.com/loganasherjones/beer-table#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.6.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
+    "jest": "^23.6.0",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "regenerator-runtime": "^0.13.1"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "<rootDir>test/setupTests.js"
+  }
+}
