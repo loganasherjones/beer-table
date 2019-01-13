@@ -4,9 +4,11 @@
   "description": "MUI Tables for Beer Garden",
   "main": "index.js",
   "scripts": {
+    "build": "cross-env NODE_ENV=production npm run prettier && rollup -c",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "coverage": "jest --coverage",
     "lint": "eslint src",
+    "prettier": "find src/ test/ -type f -name \"*.js\" | xargs prettier --write",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -26,15 +28,23 @@
     "url": "https://github.com/loganasherjones/beer-table/issues"
   },
   "homepage": "https://github.com/loganasherjones/beer-table#readme",
+  "peerDependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
   "devDependencies": {
-    "babel-core": "^6.26.3",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-external-helpers": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-syntax-class-properties": "^7.2.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-jest": "^23.4.2",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
     "coveralls": "^3.0.2",
+    "cross-env": "^5.2.0",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.7.1",
     "eslint": "^5.12.0",
@@ -43,9 +53,16 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-react": "^7.12.3",
     "jest": "^23.6.0",
+    "prettier": "^1.15.3",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "regenerator-runtime": "^0.13.1"
+    "regenerator-runtime": "^0.13.1",
+    "rollup": "^1.1.0",
+    "rollup-plugin-babel": "^4.3.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-uglify": "^6.0.1"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>test/setupTests.js"
