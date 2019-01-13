@@ -7,6 +7,7 @@
     "build": "cross-env NODE_ENV=production npm run prettier && rollup -c",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "coverage": "jest --coverage",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server -d --progress --colors",
     "lint": "eslint src",
     "prettier": "find src/ test/ -type f -name \"*.js\" | xargs prettier --write",
     "test": "jest",
@@ -43,6 +44,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.5",
     "babel-preset-env": "^1.7.0",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
@@ -63,7 +65,10 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-replace": "^2.1.0",
-    "rollup-plugin-uglify": "^6.0.1"
+    "rollup-plugin-uglify": "^6.0.1",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-server": "^3.1.14"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>test/setupTests.js"

@@ -4,7 +4,7 @@ import BeerTable from '../../src/';
 
 class Example extends React.Component {
   render() {
-    return <BeerTable text="text from server" />;
+    return <BeerTable text="text from client" />;
   }
 }
 
