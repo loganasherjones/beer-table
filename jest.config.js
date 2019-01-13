@@ -24,12 +24,10 @@ module.exports = {
   // collectCoverageFrom: null,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  coveragePathIgnorePatterns: ['/node_modules/', 'test/'],
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -115,7 +113,7 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles: ["<rootDir>/test/setupTests.js"],
+  setupFiles: ['<rootDir>/test/setupTests.js'],
 
   // The path to a module that runs some code to configure or set up the testing framework before each test
   // setupTestFrameworkScriptFile: null,
