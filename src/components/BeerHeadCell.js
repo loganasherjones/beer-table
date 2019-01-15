@@ -88,6 +88,7 @@ class BeerHeadCell extends Component {
         label={column.name}
         onChange={this.handleFilterChange}
         value={filterValue}
+        disabled={column.disableFilter}
         InputProps={{
           endAdornment: <InputAdornment position="end">{this.renderSortIcon()}</InputAdornment>,
         }}
@@ -115,6 +116,7 @@ class BeerHeadCell extends Component {
     return (
       <div className={classes.container}>
         <Button
+          disabled={column.disableFilter}
           className={classes.fakeSelect}
           aria-owns={anchorEl ? menuId : undefined}
           aria-haspopup="true"
