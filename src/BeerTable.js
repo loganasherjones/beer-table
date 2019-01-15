@@ -32,7 +32,6 @@ class BeerTable extends Component {
 
   constructor(props) {
     super(props);
-    console.log('calling constructor');
     this.state.columns = this.getColumnsState();
     this.state.displayData = this.computeDisplayData();
   }
@@ -90,18 +89,13 @@ class BeerTable extends Component {
 
   shouldFilter = (row, columns) => {
     const activeFilters = columns.filter(col => !_.isEmpty(col.filterValue));
-    console.log(`num activeFilters: ${activeFilters.length}`);
 
     let match = false;
     for (let column of activeFilters) {
-      console.log(`found acive filter for ${column.key}`);
-      console.log(column);
       const { filterValue } = column;
       const columnValue = row[column.key];
       if (column.customMatch) {
-        console.log('custom match found!');
         match = column.customMatch(columnValue, filterValue);
-        console.log(`match?: ${match}`);
       } else {
         match =
           columnValue
