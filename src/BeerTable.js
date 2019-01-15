@@ -48,6 +48,7 @@ class BeerTable extends Component {
         sort: pCol.sort || null,
         sortDirection: pCol.sortDirection || null,
         customMatch: pCol.customMatch || null,
+        filterEnum: pCol.filterEnum || null,
       });
     }
     return stateColumns;

@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { defaultColumns } from '../utils';
 
-import { TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { Sort, ArrowDownward, ArrowUpward } from '@material-ui/icons';
 import BeerHeadCell from '../../src/components/BeerHeadCell';
 
@@ -49,6 +49,13 @@ describe('<BeerHeadCell />', () => {
       expect(cell.find(Sort)).toHaveLength(0);
       expect(cell.find(ArrowDownward)).toHaveLength(0);
       expect(cell.find(ArrowUpward)).toHaveLength(1);
+    });
+
+    test('button when filterEnum is provided', () => {
+      const column = Object.assign({}, defaultColumns[0]);
+      column.filterEnum = ['echo', 'complex'];
+      const { cell } = setup({ column });
+      expect(cell.find(Button)).toHaveLength(1);
     });
   });
 
