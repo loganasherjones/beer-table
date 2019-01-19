@@ -28,7 +28,10 @@ export const BIG_DATA = [...Array(1000).keys()].map(index => {
   let status;
   let createdAt;
   if (index !== 0) {
-    startdate.subtract(index, 'minutes').format('x');
+    startdate
+      .clone()
+      .subtract(index, 'minutes')
+      .format('x');
     if (getRandomInt(0, 1)) {
       status = 'SUCCESS';
     } else {
@@ -42,87 +45,88 @@ export const BIG_DATA = [...Array(1000).keys()].map(index => {
   return createData(system, command, systemVersion, status, createdAt, null);
 });
 
+const startDates = [
+  startdate.format('x'),
+  startdate
+    .clone()
+    .subtract(5, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(6, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(7, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(8, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(9, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(10, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(11, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(12, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(13, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(14, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(15, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(16, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(1, 'day')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(1, 'month')
+    .format('x'),
+  startdate
+    .clone()
+    .subtract(1, 'year')
+    .format('x'),
+];
+
 const DATA = [
-  createData('echo', 'say', '1.0.0', 'IN_PROGRESS', startdate.format('x'), null),
-  createData('echo', 'say', '1.0.0', 'SUCCESS', startdate.subtract(5, 'minutes').format('x'), null),
-  createData('echo', 'say', '1.0.0', 'SUCCESS', startdate.subtract(6, 'minutes').format('x'), null),
-  createData('echo', 'say', '1.0.0', 'SUCCESS', startdate.subtract(7, 'minutes').format('x'), null),
-  createData('echo', 'say', '1.0.0', 'SUCCESS', startdate.subtract(8, 'minutes').format('x'), null),
-  createData('echo', 'say', '1.0.0', 'SUCCESS', startdate.subtract(9, 'minutes').format('x'), null),
-  createData(
-    'echo',
-    'say',
-    '1.0.0',
-    'SUCCESS',
-    startdate.subtract(10, 'minutes').format('x'),
-    null,
-  ),
-  createData(
-    'echo',
-    'say',
-    '1.0.0',
-    'SUCCESS',
-    startdate.subtract(11, 'minutes').format('x'),
-    null,
-  ),
-  createData('error', 'say', '1.0.0', 'ERROR', startdate.subtract(12, 'minutes').format('x'), null),
-  createData('echo', 'say', '1.0.0', 'ERROR', startdate.subtract(13, 'minutes').format('x'), null),
-  createData(
-    'echo',
-    'say',
-    '1.0.0',
-    'SUCCESS',
-    startdate.subtract(14, 'minutes').format('x'),
-    null,
-  ),
-  createData(
-    'complex',
-    'say-sleep',
-    '1.0.0',
-    'SUCCESS',
-    startdate.subtract(15, 'minutes').format('x'),
-    null,
-  ),
-  createData(
-    'complex',
-    'sleep-say',
-    '1.0.0',
-    'SUCCESS',
-    startdate.subtract(16, 'minutes').format('x'),
-    null,
-  ),
-  createData(
-    'complex',
-    'say-sleep',
-    '1.0.0',
-    'SUCCESS',
-    startdate.subtract(17, 'minutes').format('x'),
-    null,
-  ),
-  createData(
-    'sleeper',
-    'sleep',
-    '1.0.0',
-    'SUCCESS',
-    startdate.subtract(1, 'day').format('x'),
-    null,
-  ),
-  createData(
-    'sleeper',
-    'sleep',
-    '1.0.0',
-    'SUCCESS',
-    startdate.subtract(1, 'month').format('x'),
-    null,
-  ),
-  createData(
-    'echo',
-    'say',
-    '1.0.0',
-    'SUCCESS',
-    startdate.subtract(1, 'year').format('x'),
-    'first!',
-  ),
+  createData('echo', 'say', '1.0.0', 'IN_PROGRESS', startDates[0], null),
+  createData('echo', 'say', '1.0.0', 'SUCCESS', startDates[1], null),
+  createData('echo', 'say', '1.0.0', 'SUCCESS', startDates[2], null),
+  createData('echo', 'say', '1.0.0', 'SUCCESS', startDates[3], null),
+  createData('echo', 'say', '1.0.0', 'SUCCESS', startDates[4], null),
+  createData('echo', 'say', '1.0.0', 'SUCCESS', startDates[5], null),
+  createData('echo', 'say', '1.0.0', 'SUCCESS', startDates[6], null),
+  createData('echo', 'say', '1.0.0', 'SUCCESS', startDates[7], null),
+  createData('error', 'say', '1.0.0', 'ERROR', startDates[8], null),
+  createData('echo', 'say', '1.0.0', 'ERROR', startDates[9], null),
+  createData('echo', 'say', '1.0.0', 'SUCCESS', startDates[10], null),
+  createData('complex', 'say-sleep', '1.0.0', 'SUCCESS', startDates[11], null),
+  createData('complex', 'sleep-say', '1.0.0', 'SUCCESS', startDates[12], null),
+  createData('complex', 'say-sleep', '1.0.0', 'SUCCESS', startDates[13], null),
+  createData('sleeper', 'sleep', '1.0.0', 'SUCCESS', startDates[14], null),
+  createData('sleeper', 'sleep', '1.0.0', 'SUCCESS', startDates[15], null),
+  createData('echo', 'say', '1.0.0', 'SUCCESS', startDates[16], 'first!'),
 ];
 
 export default DATA;

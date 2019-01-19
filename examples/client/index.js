@@ -15,9 +15,13 @@ class Example extends React.Component {
       { name: 'System', id: 'system' },
       { name: 'Command', id: 'command' },
       { name: 'System Version', id: 'systemVersion' },
-      { name: 'Status', id: 'status' },
-      { name: 'Created At', id: 'createdAt', formatter: this.formatDate },
-      { name: 'Comment', id: 'comment' },
+      {
+        name: 'Status',
+        id: 'status',
+        filterEnum: ['CREATED', 'RECEIVED', 'IN_PROGRESS', 'SUCCESS', 'ERROR'],
+      },
+      { name: 'Created At', id: 'createdAt', formatter: this.formatDate, datetime: true },
+      { name: 'Comment', id: 'comment', disableFilter: true },
     ];
     return <BeerTable data={DATA} columns={columns} />;
   }

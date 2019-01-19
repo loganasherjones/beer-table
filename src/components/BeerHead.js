@@ -15,15 +15,7 @@ class BeerHead extends Component {
       <TableHead>
         <TableRow>
           {columns.map(col => {
-            return (
-              <BeerHeadCell
-                key={col.key}
-                column={col}
-                sortDirection={col.sortDirection}
-                filterValue={col.filterValue}
-                onFilterUpdate={onFilterUpdate}
-              />
-            );
+            return <BeerHeadCell key={col.key} column={col} onFilterUpdate={onFilterUpdate} />;
           })}
         </TableRow>
       </TableHead>

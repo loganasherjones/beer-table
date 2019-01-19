@@ -2,14 +2,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
+  IconButton,
   InputAdornment,
   Menu,
   MenuItem,
   TableCell,
   TextField,
+  Tooltip,
   withStyles,
 } from '@material-ui/core';
-import { ArrowDropDown, Sort, ArrowDownward, ArrowUpward } from '@material-ui/icons';
+import moment from 'moment';
+import MomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider, DateTimePicker } from 'material-ui-pickers';
+import { ArrowDownward, ArrowDropDown, ArrowUpward, CalendarToday, Sort } from '@material-ui/icons';
 
 import _ from '../utils';
 
@@ -20,6 +25,7 @@ const styles = theme => ({
     flexWrap: 'nowrap',
     alignItems: 'center',
   },
+  hidden: { display: 'none' },
   pointer: { cursor: 'pointer' },
   fakeSelect: {
     color: theme.palette.text.secondary,
@@ -31,8 +37,6 @@ class BeerHeadCell extends Component {
     classes: PropTypes.object.isRequired,
     column: PropTypes.object.isRequired,
     onFilterUpdate: PropTypes.func.isRequired,
-    sortDirection: PropTypes.string,
-    filterValue: PropTypes.string,
   };
 
   state = {
@@ -40,7 +44,7 @@ class BeerHeadCell extends Component {
   };
 
   handleFilterChange = event => {
-    this.props.onFilterUpdate(this.props.column.key, event.target.value);
+    this.props.onFilterUpdate(this.props.column, event.target.value);
   };
 
   handleSortClick = event => {
@@ -53,8 +57,18 @@ class BeerHeadCell extends Component {
   };
 
   handleSelectClick = value => {
-    this.props.onFilterUpdate(this.props.column.key, value);
+    this.props.onFilterUpdate(this.props.column, value);
     this.closeMenu();
+  };
+
+  handleDateChange = (date, type) => {
+    const val = date === null ? '' : parseInt(moment(date).format('x'));
+    const { column } = this.props;
+    if (type === 'begin') {
+      this.props.onFilterUpdate(column, [val, column.filterValue[1]]);
+    } else {
+      this.props.onFilterUpdate(column, [column.filterValue[0], val]);
+    }
   };
 
   closeMenu = event => {
@@ -62,7 +76,10 @@ class BeerHeadCell extends Component {
   };
 
   renderSortIcon = () => {
-    const { sortDirection, classes } = this.props;
+    const {
+      column: { sortDirection },
+      classes,
+    } = this.props;
     const sortActive = sortDirection !== null && sortDirection !== undefined;
     const iconProps = {
       className: classes.pointer,
@@ -79,16 +96,68 @@ class BeerHeadCell extends Component {
     }
   };
 
+  openPicker = (picker, e) => {
+    picker.open(e);
+  };
+
+  renderDateTimeRange = () => {
+    const {
+      classes,
+      column: { name, filterValue },
+    } = this.props;
+    return (
+      <div className={classes.container}>
+        <Tooltip placement="top" title="Begin Date">
+          <IconButton
+            aria-label={`Begin Date for ${name}`}
+            onClick={e => this.openPicker(this.beginPicker, e)}>
+            <CalendarToday fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        {name}
+        <Tooltip placement="top" title="End Date">
+          <IconButton
+            aria-label={`End Date for ${name}`}
+            onClick={e => this.openPicker(this.endPicker, e)}>
+            <CalendarToday fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <DateTimePicker
+            ref={node => {
+              this.beginPicker = node;
+            }}
+            clearable
+            value={filterValue[0]}
+            onChange={date => this.handleDateChange(date, 'begin')}
+            className={classes.hidden}
+          />
+          <DateTimePicker
+            ref={node => {
+              this.endPicker = node;
+            }}
+            clearable
+            className={classes.hidden}
+            value={filterValue[1]}
+            onChange={date => this.handleDateChange(date, 'end')}
+          />
+        </MuiPickersUtilsProvider>
+      </div>
+    );
+  };
+
   renderTextField = () => {
-    const { column, filterValue } = this.props;
+    const {
+      column: { key, name, disableFilter, filterValue },
+    } = this.props;
     return (
       <TextField
-        id={column.key}
-        name={column.name}
-        label={column.name}
+        id={key}
+        name={name}
+        label={name}
         onChange={this.handleFilterChange}
         value={filterValue}
-        disabled={column.disableFilter}
+        disabled={disableFilter}
         InputProps={{
           endAdornment: <InputAdornment position="end">{this.renderSortIcon()}</InputAdornment>,
         }}
@@ -97,31 +166,34 @@ class BeerHeadCell extends Component {
   };
 
   renderSelectField = () => {
-    const { classes, column, filterValue } = this.props;
+    const {
+      classes,
+      column: { key, disableFilter, name, filterValue, filterEnum },
+    } = this.props;
     const { anchorEl } = this.state;
     const menuItems = [
       <MenuItem key={0} value="" onClick={() => this.handleSelectClick('')}>
         <em>None</em>
       </MenuItem>,
     ];
-    column.filterEnum.map((val, index) => {
+    filterEnum.map((val, index) => {
       menuItems.push(
         <MenuItem key={index + 1} value={val} onClick={() => this.handleSelectClick(val)}>
           {val}
         </MenuItem>,
       );
     });
-    const menuId = `col-menu-${column.key}`;
+    const menuId = `col-menu-${key}`;
 
     return (
       <div className={classes.container}>
         <Button
-          disabled={column.disableFilter}
+          disabled={disableFilter}
           className={classes.fakeSelect}
           aria-owns={anchorEl ? menuId : undefined}
           aria-haspopup="true"
           onClick={this.openMenu}>
-          {filterValue ? filterValue : column.name}
+          {filterValue ? filterValue : name}
           <ArrowDropDown />
         </Button>
         {this.renderSortIcon()}
@@ -135,10 +207,12 @@ class BeerHeadCell extends Component {
   render() {
     const { column } = this.props;
     let header;
-    if (_.isEmpty(column.filterEnum)) {
-      header = this.renderTextField();
-    } else {
+    if (!_.isEmpty(column.filterEnum)) {
       header = this.renderSelectField();
+    } else if (column.datetime) {
+      header = this.renderDateTimeRange();
+    } else {
+      header = this.renderTextField();
     }
     return <TableCell key={column.key}>{header}</TableCell>;
   }

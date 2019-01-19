@@ -32,24 +32,31 @@ class BeerTable extends Component {
 
   constructor(props) {
     super(props);
-    this.state.columns = this.getColumnsState();
+    this.state.columns = this.constructColumnsState();
     this.state.displayData = this.computeDisplayData();
   }
 
-  getColumnsState = () => {
+  constructColumnsState = () => {
     const propColumns = this.props.columns;
     const stateColumns = [];
     for (let pCol of propColumns) {
+      let defaultFilterVal;
+      if (pCol.datetime) {
+        defaultFilterVal = ['', ''];
+      } else {
+        defaultFilterVal = '';
+      }
       stateColumns.push({
         key: pCol.id ? pCol.id : pCol.name,
         name: pCol.name,
         formatter: pCol.formatter || null,
-        filterValue: pCol.filterValue || '',
+        filterValue: pCol.filterValue || defaultFilterVal,
         sort: pCol.sort || null,
         sortDirection: pCol.sortDirection || null,
         customMatch: pCol.customMatch || null,
         filterEnum: pCol.filterEnum || null,
         disableFilter: pCol.disableFilter || false,
+        datetime: pCol.datetime || false,
       });
     }
     return stateColumns;
@@ -59,20 +66,14 @@ class BeerTable extends Component {
     const { data } = this.props;
     const { columns } = this.state;
     const filteredData = [];
-    console.log('Computing Display data...');
-    console.log(columns);
+
     for (let row of data) {
       this.shouldFilter(row, columns) ? null : filteredData.push(row);
     }
-    console.log('Filtered data');
-    console.log(filteredData);
 
     const columnToSort = columns.find(
       col => !(col.sortDirection === null || col.sortDirection === undefined),
     );
-
-    console.log('Column to sort...');
-    console.log(columnToSort);
 
     if (columnToSort) {
       let sortFunc;
@@ -90,32 +91,35 @@ class BeerTable extends Component {
   };
 
   shouldFilter = (row, columns) => {
-    const activeFilters = columns.filter(col => !_.isEmpty(col.filterValue));
-
     let match = false;
-    for (let column of activeFilters) {
+    for (let column of columns) {
+      if (column.datetime && column.filterValue[0] === '' && column.filterValue[1] === '') {
+        continue;
+      } else if (_.isEmpty(column.filterValue)) {
+        continue;
+      }
+
       const { filterValue } = column;
       const columnValue = row[column.key];
       if (column.customMatch) {
         match = column.customMatch(columnValue, filterValue);
+      } else if (column.datetime) {
+        match = _.datetimeMatch(columnValue, filterValue[0], filterValue[1]);
       } else {
-        match =
-          columnValue
-            .toString()
-            .toLowerCase()
-            .indexOf(filterValue.toString().toLowerCase()) >= 0;
+        match = _.defaultMatch(columnValue, filterValue);
       }
 
       if (!match) {
         return true;
       }
     }
+
     return false;
   };
 
-  handleFilterChange = (colKey, newValue) => {
+  handleFilterChange = (propColumn, newValue) => {
     const { columns } = this.state;
-    const column = columns.find(c => c.key === colKey);
+    const column = columns.find(c => c.key === propColumn.key);
     column.filterValue = newValue;
     this.setState({ columns, displayData: this.computeDisplayData() });
   };
