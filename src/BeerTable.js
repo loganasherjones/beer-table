@@ -53,6 +53,7 @@ class BeerTable extends Component {
         filterValue: pCol.filterValue || defaultFilterVal,
         sort: pCol.sort || null,
         sortDirection: pCol.sortDirection || null,
+        disableSort: pCol.disableSort || false,
         defaultSortDirection: pCol.defaultSortDirection || 'desc',
         customMatch: pCol.customMatch || null,
         filterEnum: pCol.filterEnum || null,

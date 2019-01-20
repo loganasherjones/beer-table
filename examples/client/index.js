@@ -27,7 +27,7 @@ class Example extends React.Component {
         datetime: true,
         sortDirection: 'desc',
       },
-      { name: 'Comment', id: 'comment', disableFilter: true },
+      { name: 'Comment', id: 'comment', disableFilter: true, disableSort: true },
     ];
     return <BeerTable data={DATA} columns={columns} />;
   }

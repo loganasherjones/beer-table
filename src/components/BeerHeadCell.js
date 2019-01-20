@@ -87,9 +87,13 @@ class BeerHeadCell extends Component {
 
   renderSortIcon = () => {
     const {
-      column: { sortDirection },
+      column: { sortDirection, disableSort },
       classes,
     } = this.props;
+
+    if (disableSort) {
+      return null;
+    }
     const sortActive = sortDirection !== null && sortDirection !== undefined;
     const iconProps = {
       className: classes.pointer,
@@ -159,8 +163,14 @@ class BeerHeadCell extends Component {
 
   renderTextField = () => {
     const {
-      column: { key, name, disableFilter, filterValue },
+      column: { key, name, disableFilter, filterValue, disableSort },
     } = this.props;
+    let inputProps;
+    if (!disableSort) {
+      inputProps = {
+        endAdornment: <InputAdornment position="end">{this.renderSortIcon()}</InputAdornment>,
+      };
+    }
     return (
       <TextField
         id={key}
@@ -169,9 +179,7 @@ class BeerHeadCell extends Component {
         onChange={this.handleFilterChange}
         value={filterValue}
         disabled={disableFilter}
-        InputProps={{
-          endAdornment: <InputAdornment position="end">{this.renderSortIcon()}</InputAdornment>,
-        }}
+        InputProps={inputProps}
       />
     );
   };

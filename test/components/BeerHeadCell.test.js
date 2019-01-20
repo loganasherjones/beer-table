@@ -56,6 +56,15 @@ describe('<BeerHeadCell />', () => {
       expect(cell.find(ArrowUpward)).toHaveLength(1);
     });
 
+    it('should not render any arrows if sort is disabled', () => {
+      const column = JSON.parse(JSON.stringify(defaultColumns[0]));
+      column.disableSort = true;
+      const { cell } = setup({ column });
+      expect(cell.find(Sort)).toHaveLength(0);
+      expect(cell.find(ArrowDownward)).toHaveLength(0);
+      expect(cell.find(ArrowUpward)).toHaveLength(0);
+    });
+
     it('button when filterEnum is provided', () => {
       const column = JSON.parse(JSON.stringify(defaultColumns[0]));
       column.filterEnum = ['echo', 'complex'];
