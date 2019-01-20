@@ -25,17 +25,28 @@ describe('Utilities', () => {
   });
 
   describe('defaultSort', () => {
-    test('null & null', () => {
-      expect(_.defaultSort(null, null)).toEqual(0);
+    test('should push nulls/undefined to the bottom on desc', () => {
+      const unsorted = [{ a: 1 }, { a: null }, { a: undefined }, { a: 4 }];
+      const expected = [{ a: 4 }, { a: 1 }, { a: null }, { a: undefined }];
+      expect(unsorted.sort(_.defaultSort('a', 'desc'))).toEqual(expected);
     });
 
-    test('push null to bottom', () => {
-      expect(_.defaultSort(1, null)).toEqual(1);
-      expect(_.defaultSort(null, 1)).toEqual(-1);
+    test('should push nulls/undefined to the bottom on asc', () => {
+      const unsorted = [{ a: 1 }, { a: null }, { a: undefined }, { a: 4 }];
+      const expected = [{ a: 1 }, { a: 4 }, { a: null }, { a: undefined }];
+      expect(unsorted.sort(_.defaultSort('a', 'asc'))).toEqual(expected);
     });
 
-    test('ignore case', () => {
-      expect(_.defaultSort('asdf', 'ASDF')).toEqual(0);
+    test('Ascending sort with duplicates', () => {
+      const unsorted = [{ a: 4 }, { a: 2 }, { a: 2 }, { a: 1 }];
+      const expected = [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 4 }];
+      expect(unsorted.sort(_.defaultSort('a', 'asc'))).toEqual(expected);
+    });
+
+    test('Descending sort with duplicates', () => {
+      const unsorted = [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 4 }];
+      const expected = [{ a: 4 }, { a: 2 }, { a: 2 }, { a: 1 }];
+      expect(unsorted.sort(_.defaultSort('a', 'desc'))).toEqual(expected);
     });
   });
 

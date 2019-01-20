@@ -53,6 +53,7 @@ class BeerTable extends Component {
         filterValue: pCol.filterValue || defaultFilterVal,
         sort: pCol.sort || null,
         sortDirection: pCol.sortDirection || null,
+        defaultSortDirection: pCol.defaultSortDirection || 'desc',
         customMatch: pCol.customMatch || null,
         filterEnum: pCol.filterEnum || null,
         disableFilter: pCol.disableFilter || false,
@@ -78,14 +79,12 @@ class BeerTable extends Component {
     if (columnToSort) {
       let sortFunc;
       if (columnToSort.sort) {
-        sortFunc = columnToSort.sort;
-      } else if (columnToSort.sortDirection === 'asc') {
-        sortFunc = _.defaultSort;
+        sortFunc = columnToSort.customSort(columnToSort.key, columnToSort.sortDirection);
       } else {
-        sortFunc = (a, b, direction) => -1 * _.defaultSort(a, b, direction);
+        sortFunc = _.defaultSort(columnToSort.key, columnToSort.sortDirection);
       }
 
-      return filteredData.sort(sortFunc);
+      filteredData.sort(sortFunc);
     }
     return filteredData;
   };
@@ -124,8 +123,17 @@ class BeerTable extends Component {
     this.setState({ columns, displayData: this.computeDisplayData() });
   };
 
-  handleSortClick = () => {
-    console.log('todo... handle sort click');
+  handleSortUpdate = (columnToSort, direction) => {
+    const { columns } = this.state;
+    for (let column of columns) {
+      if (column.key === columnToSort.key) {
+        column.sortDirection = direction;
+      } else {
+        column.sortDirection = null;
+      }
+    }
+
+    this.setState({ columns, displayData: this.computeDisplayData() });
   };
 
   getColDisplayValue = (col, row) => {
@@ -169,7 +177,11 @@ class BeerTable extends Component {
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
-          <BeerHead columns={columns} onFilterUpdate={this.handleFilterChange} />
+          <BeerHead
+            columns={columns}
+            onFilterUpdate={this.handleFilterChange}
+            onSortUpdate={this.handleSortUpdate}
+          />
           {this.renderBody()}
         </Table>
       </Paper>

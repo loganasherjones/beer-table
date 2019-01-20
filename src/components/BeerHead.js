@@ -7,15 +7,23 @@ class BeerHead extends Component {
   static propTypes = {
     columns: PropTypes.array.isRequired,
     onFilterUpdate: PropTypes.func.isRequired,
+    onSortUpdate: PropTypes.func.isRequired,
   };
 
   render() {
-    const { columns, onFilterUpdate } = this.props;
+    const { columns, onFilterUpdate, onSortUpdate } = this.props;
     return (
       <TableHead>
         <TableRow>
           {columns.map(col => {
-            return <BeerHeadCell key={col.key} column={col} onFilterUpdate={onFilterUpdate} />;
+            return (
+              <BeerHeadCell
+                key={col.key}
+                column={col}
+                onFilterUpdate={onFilterUpdate}
+                onSortUpdate={onSortUpdate}
+              />
+            );
           })}
         </TableRow>
       </TableHead>

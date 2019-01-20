@@ -15,9 +15,10 @@ const setup = overrideProps => {
     },
     overrideProps,
   );
-  const table = shallow(<BeerTable {...props} />);
+  const wrapper = shallow(<BeerTable {...props} />);
   return {
-    table,
+    wrapper,
+    table: wrapper.dive(),
     props,
   };
 };
@@ -25,8 +26,8 @@ const setup = overrideProps => {
 describe('<BeerTable />', () => {
   it('renders a header and body', () => {
     const { table } = setup();
-    expect(table.dive().find(BeerHead)).toHaveLength(1);
-    expect(table.dive().find(TableBody)).toHaveLength(1);
+    expect(table.find(BeerHead)).toHaveLength(1);
+    expect(table.find(TableBody)).toHaveLength(1);
   });
 
   describe('filtering', () => {
@@ -34,7 +35,7 @@ describe('<BeerTable />', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[0].filterValue = 'echo';
       const { table } = setup({ columns });
-      const body = table.dive().find(TableBody);
+      const body = table.find(TableBody);
       expect(body.find(TableRow)).toHaveLength(3);
     });
 
@@ -42,7 +43,7 @@ describe('<BeerTable />', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[0].filterValue = 'c';
       const { table } = setup({ columns });
-      const body = table.dive().find(TableBody);
+      const body = table.find(TableBody);
       expect(body.find(TableRow)).toHaveLength(4);
     });
 
@@ -51,7 +52,7 @@ describe('<BeerTable />', () => {
       columns[0].filterValue = 'c';
       columns[1].filterValue = 'sleep';
       const { table } = setup({ columns });
-      const body = table.dive().find(TableBody);
+      const body = table.find(TableBody);
       expect(body.find(TableRow)).toHaveLength(1);
     });
 
@@ -63,7 +64,7 @@ describe('<BeerTable />', () => {
       columns[0].filterValue = 'echo';
       columns[0].customMatch = neverMatch;
       const { table } = setup({ columns });
-      const body = table.dive().find(TableBody);
+      const body = table.find(TableBody);
       expect(body.find(TableRow)).toHaveLength(0);
     });
 
@@ -71,8 +72,26 @@ describe('<BeerTable />', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[4].filterValue = [moment(0).format('x'), ''];
       const { table } = setup({ columns });
-      const body = table.dive().find(TableBody);
+      const body = table.find(TableBody);
       expect(body.find(TableRow)).toHaveLength(5);
+    });
+  });
+
+  describe('sorting', () => {
+    it('should sort ascending correctly', () => {
+      const columns = JSON.parse(JSON.stringify(defaultColumns));
+      columns[0].sortDirection = 'asc';
+      const { table } = setup({ columns });
+      const systems = table.state('displayData').map(d => d.system);
+      expect(systems).toEqual(['complex', 'echo', 'echo', 'echo', 'error', 'sleeper']);
+    });
+
+    it('should sort desending correctly', () => {
+      const columns = JSON.parse(JSON.stringify(defaultColumns));
+      columns[0].sortDirection = 'desc';
+      const { table } = setup({ columns });
+      const systems = table.state('displayData').map(d => d.system);
+      expect(systems).toEqual(['sleeper', 'error', 'echo', 'echo', 'echo', 'complex']);
     });
   });
 });

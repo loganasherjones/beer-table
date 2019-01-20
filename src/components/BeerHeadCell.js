@@ -37,6 +37,7 @@ class BeerHeadCell extends Component {
     classes: PropTypes.object.isRequired,
     column: PropTypes.object.isRequired,
     onFilterUpdate: PropTypes.func.isRequired,
+    onSortUpdate: PropTypes.func.isRequired,
   };
 
   state = {
@@ -47,9 +48,18 @@ class BeerHeadCell extends Component {
     this.props.onFilterUpdate(this.props.column, event.target.value);
   };
 
-  handleSortClick = event => {
-    console.log('TODO: Handle sort click for col:');
-    console.log(this.props.column.key);
+  handleSortClick = () => {
+    const { column, onSortUpdate } = this.props;
+    let direction;
+    if (column.sortDirection === 'asc') {
+      direction = 'desc';
+    } else if (column.sortDirection === 'desc') {
+      direction = 'asc';
+    } else {
+      direction = column.defaultSortDirection;
+    }
+
+    onSortUpdate(this.props.column, direction);
   };
 
   openMenu = event => {

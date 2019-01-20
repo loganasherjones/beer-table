@@ -10,6 +10,7 @@ const setup = overrideProps => {
     {
       columns: defaultColumns,
       onFilterUpdate: jest.fn(),
+      onSortUpdate: jest.fn(),
     },
     overrideProps,
   );
