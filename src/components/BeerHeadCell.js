@@ -107,7 +107,7 @@ class BeerHeadCell extends Component {
     } = this.props;
     return (
       <div className={classes.container}>
-        <Tooltip placement="top" title="Begin Date">
+        <Tooltip disableFocusListener={true} placement="top" title="Begin Date">
           <IconButton
             aria-label={`Begin Date for ${name}`}
             onClick={e => this.openPicker(this.beginPicker, e)}>
@@ -115,7 +115,7 @@ class BeerHeadCell extends Component {
           </IconButton>
         </Tooltip>
         {name}
-        <Tooltip placement="top" title="End Date">
+        <Tooltip disableFocusListener={true} placement="top" title="End Date">
           <IconButton
             aria-label={`End Date for ${name}`}
             onClick={e => this.openPicker(this.endPicker, e)}>
