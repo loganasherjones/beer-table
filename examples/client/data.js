@@ -97,6 +97,10 @@ const startDates = [
     .format('x'),
   startdate
     .clone()
+    .subtract(17, 'minutes')
+    .format('x'),
+  startdate
+    .clone()
     .subtract(1, 'day')
     .format('x'),
   startdate

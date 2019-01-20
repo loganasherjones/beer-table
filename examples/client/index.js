@@ -20,7 +20,13 @@ class Example extends React.Component {
         id: 'status',
         filterEnum: ['CREATED', 'RECEIVED', 'IN_PROGRESS', 'SUCCESS', 'ERROR'],
       },
-      { name: 'Created At', id: 'createdAt', formatter: this.formatDate, datetime: true },
+      {
+        name: 'Created At',
+        id: 'createdAt',
+        formatter: this.formatDate,
+        datetime: true,
+        sortDirection: 'desc',
+      },
       { name: 'Comment', id: 'comment', disableFilter: true },
     ];
     return <BeerTable data={DATA} columns={columns} />;
