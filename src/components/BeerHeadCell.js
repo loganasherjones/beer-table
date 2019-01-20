@@ -122,6 +122,7 @@ class BeerHeadCell extends Component {
             <CalendarToday fontSize="small" />
           </IconButton>
         </Tooltip>
+        {this.renderSortIcon()}
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <DateTimePicker
             ref={node => {
