@@ -30,6 +30,12 @@ const styles = theme => ({
   fakeSelect: {
     color: theme.palette.text.secondary,
   },
+  header: {
+    backgroundColor: theme.palette.background.paper,
+    position: 'sticky',
+    top: 0,
+    zIndex: 10,
+  },
 });
 
 class BeerHeadCell extends Component {
@@ -72,7 +78,7 @@ class BeerHeadCell extends Component {
   };
 
   handleDateChange = (date, type) => {
-    const val = date === null ? '' : parseInt(moment(date).format('x'));
+    const val = _.exists(date) ? parseInt(moment(date).format('x')) : '';
     const { column } = this.props;
     if (type === 'begin') {
       this.props.onFilterUpdate(column, [val, column.filterValue[1]]);
@@ -224,7 +230,7 @@ class BeerHeadCell extends Component {
   };
 
   render() {
-    const { column } = this.props;
+    const { column, classes } = this.props;
     let header;
     if (!_.isEmpty(column.filterEnum)) {
       header = this.renderSelectField();
@@ -233,7 +239,11 @@ class BeerHeadCell extends Component {
     } else {
       header = this.renderTextField();
     }
-    return <TableCell key={column.key}>{header}</TableCell>;
+    return (
+      <TableCell className={classes.header} key={column.key}>
+        {header}
+      </TableCell>
+    );
   }
 }
 
