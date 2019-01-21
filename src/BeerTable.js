@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles, Paper, Table, TableCell, TableBody, TableRow } from '@material-ui/core';
 import _ from './utils';
 import BeerHead from './components/BeerHead';
+import BeerFooter from './components/BeerFooter';
 
 const styles = theme => ({
   root: {
@@ -20,22 +21,42 @@ const styles = theme => ({
 
 class BeerTable extends Component {
   static propTypes = {
+    classes: PropTypes.object.isRequired,
     columns: PropTypes.array.isRequired,
     data: PropTypes.array.isRequired,
-    classes: PropTypes.object.isRequired,
+    filterCount: PropTypes.number,
+    pagination: PropTypes.object,
+    totalCount: PropTypes.number,
   };
 
   state = {
     columns: [],
     displayData: [],
+    filterCount: null,
+    totalCount: null,
+    pagination: {},
   };
 
   constructor(props) {
     super(props);
     this.state.columns = this.constructColumnsState();
-    this.state.displayData = this.computeDisplayData();
+    this.state.pagination = this.constructPaginationState();
+    const { displayData, filterCount, totalCount } = this.computeDisplayState();
+    this.state.displayData = displayData;
+    this.state.filterCount = filterCount;
+    this.state.totalCount = totalCount;
   }
 
+  constructPaginationState = () => {
+    return Object.assign(
+      {
+        currentPageNum: 0,
+        rowsPerPageOptions: [10, 25, 50, 100],
+        rowsPerPage: 10,
+      },
+      this.props.pagination,
+    );
+  };
   constructColumnsState = () => {
     const propColumns = this.props.columns;
     const stateColumns = [];
@@ -64,18 +85,18 @@ class BeerTable extends Component {
     return stateColumns;
   };
 
-  computeDisplayData = () => {
+  computeDisplayState = () => {
     const { data } = this.props;
-    const { columns } = this.state;
+    const { columns, pagination } = this.state;
     const filteredData = [];
+
+    const totalCount = _.exists(this.props.totalCount) ? this.props.totalCount : data.length;
 
     for (let row of data) {
       this.shouldFilter(row, columns) ? null : filteredData.push(row);
     }
 
-    const columnToSort = columns.find(
-      col => !(col.sortDirection === null || col.sortDirection === undefined),
-    );
+    const columnToSort = columns.find(col => _.exists(col.sortDirection));
 
     if (columnToSort) {
       let sortFunc;
@@ -87,7 +108,17 @@ class BeerTable extends Component {
 
       filteredData.sort(sortFunc);
     }
-    return filteredData;
+
+    const filterCount = _.exists(this.props.filterCount)
+      ? this.props.filterCount
+      : filteredData.length;
+    const beginIndex = Math.max(pagination.currentPageNum * pagination.rowsPerPage - 1, 0);
+    const endIndex = Math.min(beginIndex + pagination.rowsPerPage, data.length);
+    return {
+      displayData: filteredData.slice(beginIndex, endIndex),
+      filterCount,
+      totalCount,
+    };
   };
 
   shouldFilter = (row, columns) => {
@@ -121,7 +152,8 @@ class BeerTable extends Component {
     const { columns } = this.state;
     const column = columns.find(c => c.key === propColumn.key);
     column.filterValue = newValue;
-    this.setState({ columns, displayData: this.computeDisplayData() });
+    const state = this.computeDisplayState();
+    this.setState({ columns, ...state });
   };
 
   handleSortUpdate = (columnToSort, direction) => {
@@ -134,7 +166,22 @@ class BeerTable extends Component {
       }
     }
 
-    this.setState({ columns, displayData: this.computeDisplayData() });
+    const state = this.computeDisplayState();
+    this.setState({ columns, ...state });
+  };
+
+  handleChangePage = (event, newPage) => {
+    const { pagination } = this.state;
+    pagination.currentPageNum = newPage;
+    const state = this.computeDisplayState();
+    this.setState({ pagination, ...state });
+  };
+
+  handleChangeRowsPerPage = event => {
+    const { pagination } = this.state;
+    pagination.rowsPerPage = event.target.value;
+    const state = this.computeDisplayState();
+    this.setState({ pagination, ...state });
   };
 
   getColDisplayValue = (col, row) => {
@@ -160,12 +207,7 @@ class BeerTable extends Component {
     return (
       <TableBody>
         {displayData.map((row, index) => {
-          let id;
-          if (row.id === null || row.id === undefined) {
-            id = index;
-          } else {
-            id = row.id;
-          }
+          const id = _.exists(row.id) ? row.id : index;
           return <TableRow key={id}>{this.renderDataRow(row)}</TableRow>;
         })}
       </TableBody>
@@ -174,7 +216,7 @@ class BeerTable extends Component {
 
   render() {
     const { classes } = this.props;
-    const { columns } = this.state;
+    const { totalCount, columns, pagination, filterCount } = this.state;
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
@@ -184,6 +226,14 @@ class BeerTable extends Component {
             onSortUpdate={this.handleSortUpdate}
           />
           {this.renderBody()}
+          <BeerFooter
+            colSpan={columns.length}
+            count={filterCount}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            totalCount={totalCount}
+            pagination={pagination}
+          />
         </Table>
       </Paper>
     );

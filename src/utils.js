@@ -3,13 +3,18 @@ export default {
   defaultMatch,
   defaultSort,
   isEmpty,
+  exists,
 };
 
 function isEmpty(val) {
-  if (val == null || val === undefined) return true;
+  if (!exists(val)) return true;
   if (Array.isArray(val) || typeof obj === 'string') return val.length === 0;
   for (var key in val) if (hasOwnProperty.call(val, key)) return false;
   return true;
+}
+
+function exists(val) {
+  return !(val === null || val === undefined);
 }
 
 function defaultMatch(a, b) {
@@ -42,11 +47,11 @@ function defaultSort(name, direction) {
     b = b[name];
 
     // Force nulls/undefineds to bottom
-    if ((a === null || a === undefined) && (b === null || b === undefined)) {
+    if (!exists(a) && !exists(b)) {
       return 0;
-    } else if (a === null || a === undefined) {
+    } else if (!exists(a)) {
       return 1;
-    } else if (b === null || b === undefined) {
+    } else if (!exists(b)) {
       return -1;
     }
 

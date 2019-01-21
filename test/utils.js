@@ -11,6 +11,12 @@ export const createData = (system, command, systemVersion, status, createdAt, co
   };
 };
 
+export const defaultPagination = {
+  currentPageNum: 0,
+  rowsPerPageOptions: [10, 25, 50, 100],
+  rowsPerPage: 10,
+};
+
 export const defaultColumns = [
   { name: 'System', id: 'system', key: 'system' },
   { name: 'Command', id: 'command', key: 'command' },
