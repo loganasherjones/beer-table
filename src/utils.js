@@ -3,6 +3,7 @@ export default {
   defaultMatch,
   defaultSort,
   isEmpty,
+  isEmptyFilter,
   exists,
 };
 
@@ -11,6 +12,15 @@ function isEmpty(val) {
   if (Array.isArray(val) || typeof obj === 'string') return val.length === 0;
   for (var key in val) if (hasOwnProperty.call(val, key)) return false;
   return true;
+}
+
+function isEmptyFilter(val) {
+  if (Array.isArray(val) && val.length === 2) {
+    if (val[0] === '' && val[1] === '') {
+      return true;
+    }
+  }
+  return isEmpty(val);
 }
 
 function exists(val) {

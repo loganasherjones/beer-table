@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, Paper, Table, TableCell, TableBody, TableRow } from '@material-ui/core';
 import _ from './utils';
-import BeerHead from './components/BeerHead';
+import BeerBody from './components/BeerBody';
 import BeerFooter from './components/BeerFooter';
+import BeerHead from './components/BeerHead';
 
 const styles = theme => ({
   root: {
@@ -184,39 +185,9 @@ class BeerTable extends Component {
     this.setState({ pagination, ...state });
   };
 
-  getColDisplayValue = (col, row) => {
-    const accessor = col.id ? col.id : col.name;
-    const rawValue = row[accessor];
-    if (col.formatter) {
-      return col.formatter(rawValue);
-    } else {
-      return rawValue;
-    }
-  };
-
-  renderDataRow = row => {
-    const { columns } = this.props;
-    return columns.map(col => {
-      const displayValue = this.getColDisplayValue(col, row);
-      return <TableCell key={col.name}>{displayValue}</TableCell>;
-    });
-  };
-
-  renderBody = () => {
-    const { displayData } = this.state;
-    return (
-      <TableBody>
-        {displayData.map((row, index) => {
-          const id = _.exists(row.id) ? row.id : index;
-          return <TableRow key={id}>{this.renderDataRow(row)}</TableRow>;
-        })}
-      </TableBody>
-    );
-  };
-
   render() {
     const { classes } = this.props;
-    const { totalCount, columns, pagination, filterCount } = this.state;
+    const { totalCount, columns, pagination, filterCount, displayData } = this.state;
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
@@ -225,7 +196,7 @@ class BeerTable extends Component {
             onFilterUpdate={this.handleFilterChange}
             onSortUpdate={this.handleSortUpdate}
           />
-          {this.renderBody()}
+          <BeerBody columns={columns} displayData={displayData} />
           <BeerFooter
             colSpan={columns.length}
             count={filterCount}

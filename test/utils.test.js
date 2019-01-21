@@ -24,6 +24,16 @@ describe('Utilities', () => {
     });
   });
 
+  describe('isEmptyFilter', () => {
+    it('should return true for a default datetime filter', () => {
+      expect(_.isEmptyFilter(['', ''])).toBe(true);
+    });
+
+    it('should return false if the datetime filter has something in it', () => {
+      expect(_.isEmptyFilter([1, ''])).toBe(false);
+    });
+  });
+
   describe('defaultSort', () => {
     test('should push nulls/undefined to the bottom on desc', () => {
       const unsorted = [{ a: 1 }, { a: null }, { a: undefined }, { a: 4 }];

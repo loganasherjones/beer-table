@@ -3,9 +3,9 @@ import { shallow } from 'enzyme';
 
 import moment from 'moment';
 import { defaultColumns, defaultData, defaultPagination } from './utils';
-import { TableBody, TableRow } from '@material-ui/core';
-import BeerHead from '../src/components/BeerHead';
+import BeerBody from '../src/components/BeerBody';
 import BeerFooter from '../src/components/BeerFooter';
+import BeerHead from '../src/components/BeerHead';
 import BeerTable from '../src/index';
 
 const setup = overrideProps => {
@@ -31,7 +31,7 @@ describe('<BeerTable />', () => {
   it('renders a header body and footer', () => {
     const { table } = setup();
     expect(table.find(BeerHead)).toHaveLength(1);
-    expect(table.find(TableBody)).toHaveLength(1);
+    expect(table.find(BeerBody)).toHaveLength(1);
     expect(table.find(BeerFooter)).toHaveLength(1);
   });
 
@@ -40,16 +40,14 @@ describe('<BeerTable />', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[0].filterValue = 'echo';
       const { table } = setup({ columns });
-      const body = table.find(TableBody);
-      expect(body.find(TableRow)).toHaveLength(3);
+      expect(table.state('displayData').length).toEqual(3);
     });
 
     it('should do partial matching', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[0].filterValue = 'c';
       const { table } = setup({ columns });
-      const body = table.find(TableBody);
-      expect(body.find(TableRow)).toHaveLength(4);
+      expect(table.state('displayData').length).toEqual(4);
     });
 
     it('should handle multiple filters with and logic', () => {
@@ -57,8 +55,7 @@ describe('<BeerTable />', () => {
       columns[0].filterValue = 'c';
       columns[1].filterValue = 'sleep';
       const { table } = setup({ columns });
-      const body = table.find(TableBody);
-      expect(body.find(TableRow)).toHaveLength(1);
+      expect(table.state('displayData').length).toEqual(1);
     });
 
     it('should respect custom filtering functions', () => {
@@ -69,16 +66,14 @@ describe('<BeerTable />', () => {
       columns[0].filterValue = 'echo';
       columns[0].customMatch = neverMatch;
       const { table } = setup({ columns });
-      const body = table.find(TableBody);
-      expect(body.find(TableRow)).toHaveLength(0);
+      expect(table.state('displayData').length).toEqual(0);
     });
 
     it('should match datetimes', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[4].filterValue = [moment(0).format('x'), ''];
       const { table } = setup({ columns });
-      const body = table.find(TableBody);
-      expect(body.find(TableRow)).toHaveLength(5);
+      expect(table.state('displayData').length).toEqual(5);
     });
   });
 
@@ -105,8 +100,7 @@ describe('<BeerTable />', () => {
       const pagination = JSON.parse(JSON.stringify(defaultPagination));
       pagination.rowsPerPage = 2;
       const { table } = setup({ pagination });
-      const body = table.find(TableBody);
-      expect(body.find(TableRow)).toHaveLength(2);
+      expect(table.state('displayData').length).toEqual(2);
     });
   });
 
