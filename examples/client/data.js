@@ -28,7 +28,7 @@ export const BIG_DATA = [...Array(1000).keys()].map(index => {
   let status;
   let createdAt;
   if (index !== 0) {
-    startdate
+    createdAt = startdate
       .clone()
       .subtract(index, 'minutes')
       .format('x');
