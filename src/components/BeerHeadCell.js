@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  IconButton,
-  InputAdornment,
-  Menu,
-  MenuItem,
-  TableCell,
-  TextField,
-  Tooltip,
-  withStyles,
-} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import TableCell from '@material-ui/core/TableCell';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
+import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, DateTimePicker } from 'material-ui-pickers';
-import { ArrowDownward, ArrowDropDown, ArrowUpward, CalendarToday, Sort } from '@material-ui/icons';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import CalendarToday from '@material-ui/icons/CalendarToday';
+import Sort from '@material-ui/icons/Sort';
 
 import _ from '../utils';
 

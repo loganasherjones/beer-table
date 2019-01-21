@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Paper, Table, TableCell, TableBody, TableRow } from '@material-ui/core';
+import Table from '@material-ui/core/Table';
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+
 import _ from './utils';
 import BeerBody from './components/BeerBody';
 import BeerFooter from './components/BeerFooter';
