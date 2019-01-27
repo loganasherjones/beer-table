@@ -1,7 +1,10 @@
 # Beer Table
 
-[![Coverage Status](https://coveralls.io/repos/github/loganasherjones/beer-table/badge.svg?branch=master)](https://coveralls.io/github/loganasherjones/beer-table?branch=master)
+[![dependencies Status](https://david-dm.org/loganasherjones/beer-table/status.svg)](https://david-dm.org/loganasherjones/beer-table)
+[![peerDependencies Status](https://david-dm.org/loganasherjones/beer-table/peer-status.svg)](https://david-dm.org/loganasherjones/beer-table?type=peer)
 [![Build Status](https://travis-ci.org/loganasherjones/beer-table.svg?branch=master)](https://travis-ci.org/loganasherjones/beer-table)
+[![Coverage Status](https://coveralls.io/repos/github/loganasherjones/beer-table/badge.svg?branch=master)](https://coveralls.io/github/loganasherjones/beer-table?branch=master)
+[![NPM Status](https://img.shields.io/npm/v/@loganasherjones/beer-table.svg)](https://www.npmjs.com/package/@loganasherjones/beer-table)
 
 Beer Table is a simple Material-UI table wrapper for server and client side:
 
