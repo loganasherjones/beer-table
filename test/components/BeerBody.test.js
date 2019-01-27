@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { defaultColumns, defaultData } from '../utils';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import BeerBody from '../../src/components/BeerBody';
@@ -10,6 +11,7 @@ const setup = overrideProps => {
   const props = Object.assign(
     {
       columns: [defaultColumns[0]],
+      loading: false,
       displayData: defaultData,
     },
     overrideProps,
@@ -37,6 +39,11 @@ describe('<BeerBody />', () => {
       const { body } = setup({ displayData: [], columns: [column] });
       expect(body.find(TableRow)).toHaveLength(1);
       expect(body.find(Typography)).toHaveLength(4);
+    });
+
+    it('should render a spinner when loading is true', () => {
+      const { body } = setup({ loading: true });
+      expect(body.find(CircularProgress)).toHaveLength(1);
     });
   });
 });

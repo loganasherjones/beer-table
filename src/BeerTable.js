@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
+import memoize from 'memoize-one';
 
 import _ from './utils';
 import BeerBody from './components/BeerBody';
@@ -28,14 +29,18 @@ class BeerTable extends Component {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.array.isRequired,
     data: PropTypes.array.isRequired,
+    loading: PropTypes.bool,
     filterCount: PropTypes.number,
     pagination: PropTypes.object,
     totalCount: PropTypes.number,
   };
 
+  static defaultProps = {
+    loading: true,
+  };
+
   state = {
     columns: [],
-    displayData: [],
     filterCount: null,
     totalCount: null,
     pagination: {},
@@ -45,10 +50,6 @@ class BeerTable extends Component {
     super(props);
     this.state.columns = this.constructColumnsState();
     this.state.pagination = this.constructPaginationState();
-    const { displayData, filterCount, totalCount } = this.computeDisplayState();
-    this.state.displayData = displayData;
-    this.state.filterCount = filterCount;
-    this.state.totalCount = totalCount;
   }
 
   constructPaginationState = () => {
@@ -61,6 +62,7 @@ class BeerTable extends Component {
       this.props.pagination,
     );
   };
+
   constructColumnsState = () => {
     const propColumns = this.props.columns;
     const stateColumns = [];
@@ -76,7 +78,7 @@ class BeerTable extends Component {
         name: pCol.name,
         formatter: pCol.formatter || null,
         filterValue: pCol.filterValue || defaultFilterVal,
-        sort: pCol.sort || null,
+        customSort: pCol.customSort || null,
         sortDirection: pCol.sortDirection || null,
         disableSort: pCol.disableSort || false,
         defaultSortDirection: pCol.defaultSortDirection || 'desc',
@@ -89,22 +91,25 @@ class BeerTable extends Component {
     return stateColumns;
   };
 
+  computeFilteredData = memoize((data, columns) => {
+    return data.filter(row => !this.shouldFilter(row, columns));
+  }, _.filtersEqual);
+
   computeDisplayState = () => {
     const { data } = this.props;
-    const { columns, pagination } = this.state;
-    const filteredData = [];
-
+    const { pagination } = this.state;
     const totalCount = _.exists(this.props.totalCount) ? this.props.totalCount : data.length;
 
-    for (let row of data) {
-      this.shouldFilter(row, columns) ? null : filteredData.push(row);
-    }
+    // Copy the columns over so that memoization works correctly.
+    const columns = this.state.columns.map(col => Object.assign({}, col));
+
+    const filteredData = this.computeFilteredData(data, columns);
 
     const columnToSort = columns.find(col => _.exists(col.sortDirection));
 
     if (columnToSort) {
       let sortFunc;
-      if (columnToSort.sort) {
+      if (columnToSort.customSort) {
         sortFunc = columnToSort.customSort(columnToSort.key, columnToSort.sortDirection);
       } else {
         sortFunc = _.defaultSort(columnToSort.key, columnToSort.sortDirection);
@@ -189,8 +194,9 @@ class BeerTable extends Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { totalCount, columns, pagination, filterCount, displayData } = this.state;
+    const { classes, loading } = this.props;
+    const { displayData, filterCount, totalCount } = this.computeDisplayState();
+    const { columns, pagination } = this.state;
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
@@ -199,7 +205,7 @@ class BeerTable extends Component {
             onFilterUpdate={this.handleFilterChange}
             onSortUpdate={this.handleSortUpdate}
           />
-          <BeerBody columns={columns} displayData={displayData} />
+          <BeerBody columns={columns} displayData={displayData} loading={loading} />
           <BeerFooter
             colSpan={columns.length}
             count={filterCount}

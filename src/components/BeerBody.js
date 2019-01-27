@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
@@ -10,6 +11,7 @@ class BeerBody extends Component {
   static propTypes = {
     columns: PropTypes.array.isRequired,
     displayData: PropTypes.array.isRequired,
+    loading: PropTypes.bool.isRequired,
   };
 
   renderMissingData = () => {
@@ -76,11 +78,28 @@ class BeerBody extends Component {
     });
   };
 
-  render() {
-    const { displayData } = this.props;
+  renderSpinner = () => {
+    const { columns } = this.props;
     return (
-      <TableBody>{_.isEmpty(displayData) ? this.renderMissingData() : this.renderData()}</TableBody>
+      <TableRow>
+        <TableCell colSpan={columns.length} align="center">
+          <CircularProgress size={70} />
+        </TableCell>
+      </TableRow>
     );
+  };
+
+  render() {
+    const { displayData, loading } = this.props;
+    let cell;
+    if (loading) {
+      cell = this.renderSpinner();
+    } else if (_.isEmpty(displayData)) {
+      cell = this.renderMissingData();
+    } else {
+      cell = this.renderData();
+    }
+    return <TableBody>{cell}</TableBody>;
   }
 }
 

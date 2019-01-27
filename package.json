@@ -81,5 +81,8 @@
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>test/setupTests.js"
   },
-  "dependencies": {}
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "memoize-one": "^5.0.0"
+  }
 }

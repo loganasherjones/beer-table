@@ -40,14 +40,16 @@ describe('<BeerTable />', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[0].filterValue = 'echo';
       const { table } = setup({ columns });
-      expect(table.state('displayData').length).toEqual(3);
+      const data = table.find(BeerBody).prop('displayData');
+      expect(data.length).toEqual(3);
     });
 
     it('should do partial matching', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[0].filterValue = 'c';
       const { table } = setup({ columns });
-      expect(table.state('displayData').length).toEqual(4);
+      const data = table.find(BeerBody).prop('displayData');
+      expect(data.length).toEqual(4);
     });
 
     it('should handle multiple filters with and logic', () => {
@@ -55,7 +57,8 @@ describe('<BeerTable />', () => {
       columns[0].filterValue = 'c';
       columns[1].filterValue = 'sleep';
       const { table } = setup({ columns });
-      expect(table.state('displayData').length).toEqual(1);
+      const data = table.find(BeerBody).prop('displayData');
+      expect(data.length).toEqual(1);
     });
 
     it('should respect custom filtering functions', () => {
@@ -66,14 +69,16 @@ describe('<BeerTable />', () => {
       columns[0].filterValue = 'echo';
       columns[0].customMatch = neverMatch;
       const { table } = setup({ columns });
-      expect(table.state('displayData').length).toEqual(0);
+      const data = table.find(BeerBody).prop('displayData');
+      expect(data.length).toEqual(0);
     });
 
     it('should match datetimes', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[4].filterValue = [moment(0).format('x'), ''];
       const { table } = setup({ columns });
-      expect(table.state('displayData').length).toEqual(5);
+      const data = table.find(BeerBody).prop('displayData');
+      expect(data.length).toEqual(5);
     });
   });
 
@@ -82,16 +87,49 @@ describe('<BeerTable />', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[0].sortDirection = 'asc';
       const { table } = setup({ columns });
-      const systems = table.state('displayData').map(d => d.system);
+      const systems = table
+        .find(BeerBody)
+        .prop('displayData')
+        .map(d => d.system);
       expect(systems).toEqual(['complex', 'echo', 'echo', 'echo', 'error', 'sleeper']);
     });
 
-    it('should sort desending correctly', () => {
+    it('should sort descending correctly', () => {
       const columns = JSON.parse(JSON.stringify(defaultColumns));
       columns[0].sortDirection = 'desc';
       const { table } = setup({ columns });
-      const systems = table.state('displayData').map(d => d.system);
+      const systems = table
+        .find(BeerBody)
+        .prop('displayData')
+        .map(d => d.system);
       expect(systems).toEqual(['sleeper', 'error', 'echo', 'echo', 'echo', 'complex']);
+    });
+
+    it('should allow custom sorting', () => {
+      const eGoesFirst = (name, direction) => {
+        return function(a, b) {
+          a = a[name];
+          b = b[name];
+          if (a.startsWith('e') && b.startsWith('e')) {
+            return 0;
+          } else if (a.startsWith('e')) {
+            return -1;
+          } else if (b.startsWith('e')) {
+            return 1;
+          }
+          return 0;
+        };
+      };
+
+      const columns = JSON.parse(JSON.stringify(defaultColumns));
+      columns[0].sortDirection = 'desc';
+      columns[0].customSort = eGoesFirst;
+      const { table } = setup({ columns });
+      const systems = table
+        .find(BeerBody)
+        .prop('displayData')
+        .map(d => d.system);
+      expect(systems).toEqual(['echo', 'error', 'echo', 'echo', 'complex', 'sleeper']);
     });
   });
 
@@ -100,7 +138,8 @@ describe('<BeerTable />', () => {
       const pagination = JSON.parse(JSON.stringify(defaultPagination));
       pagination.rowsPerPage = 2;
       const { table } = setup({ pagination });
-      expect(table.state('displayData').length).toEqual(2);
+      const data = table.find(BeerBody).prop('displayData');
+      expect(data.length).toEqual(2);
     });
   });
 

@@ -1,3 +1,5 @@
+import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 export default {
   datetimeMatch,
   defaultMatch,
@@ -5,13 +7,19 @@ export default {
   isEmpty,
   isEmptyFilter,
   exists,
+  filtersEqual,
 };
 
-function isEmpty(val) {
-  if (!exists(val)) return true;
-  if (Array.isArray(val) || typeof obj === 'string') return val.length === 0;
-  for (var key in val) if (hasOwnProperty.call(val, key)) return false;
-  return true;
+function filtersEqual(newArgs, lastArgs) {
+  const newData = newArgs[0];
+  const newColumns = newArgs[1];
+  const oldData = lastArgs[0];
+  const oldColumns = lastArgs[1];
+
+  if (newData.length !== oldData.length) {
+    return false;
+  }
+  return isEqual(newColumns, oldColumns);
 }
 
 function isEmptyFilter(val) {
@@ -56,7 +64,7 @@ function defaultSort(name, direction) {
     a = a[name];
     b = b[name];
 
-    // Force nulls/undefineds to bottom
+    // Force nulls/undefined to bottom
     if (!exists(a) && !exists(b)) {
       return 0;
     } else if (!exists(a)) {
@@ -70,7 +78,7 @@ function defaultSort(name, direction) {
     b = typeof b === 'string' ? b.toLowerCase() : b;
     // Return either 1 or -1 to indicate a sort priority
     if (a > b) {
-      return 1 * sortOrder;
+      return sortOrder;
     }
     if (a < b) {
       return -1 * sortOrder;
