@@ -21,6 +21,21 @@ class BeerBody extends Component {
         return total + 1;
       }
     }, 0);
+
+    let additionalInfo = null;
+    if (activeFilters > 0) {
+      additionalInfo = (
+        <>
+          <Typography color="textSecondary" variant="subtitle1">
+            Number of active filters: {activeFilters}
+          </Typography>
+          <Typography color="textSecondary" variant="subtitle1">
+            You could try removing the filters to see the data again.
+          </Typography>
+        </>
+      );
+    }
+
     return (
       <TableRow>
         <TableCell colSpan={columns.length} align="center">
@@ -30,14 +45,7 @@ class BeerBody extends Component {
           <Typography color="textSecondary" variant="subtitle1">
             There doesnt seem to be any data.
           </Typography>
-          <Typography color="textSecondary" variant="subtitle1">
-            Number of active filters: {activeFilters}
-          </Typography>
-          {activeFilters > 0 && (
-            <Typography color="textSecondary" variant="subtitle1">
-              You chould try removing the filters to see the data again.
-            </Typography>
-          )}
+          {additionalInfo}
         </TableCell>
       </TableRow>
     );

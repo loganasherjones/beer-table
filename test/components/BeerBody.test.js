@@ -28,7 +28,7 @@ describe('<BeerBody />', () => {
     it('should render typography on empty data', () => {
       const { body } = setup({ displayData: [] });
       expect(body.find(TableRow)).toHaveLength(1);
-      expect(body.find(Typography)).toHaveLength(3);
+      expect(body.find(Typography)).toHaveLength(2);
     });
 
     it('should render another message if a filter is active', () => {
