@@ -1,5 +1,5 @@
 {
-  "name": "beer-table",
+  "name": "@loganasherjones/beer-table",
   "version": "0.1.0",
   "description": "MUI Tables for Beer Garden",
   "main": "index.js",

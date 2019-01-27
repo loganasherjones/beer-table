@@ -14,7 +14,7 @@ NOTE: This package is currently in alpha and is subject to aggressive API change
 ## Install
 
 ```
-npm install beer-table --save
+npm install @loganasherjones/beer-table --save
 ```
 
 ## Demo
