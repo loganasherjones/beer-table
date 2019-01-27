@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    app: './examples/client/index.js',
+    app: './examples/index.js',
   },
   stats: 'verbose',
   context: __dirname,
