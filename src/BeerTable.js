@@ -36,7 +36,7 @@ class BeerTable extends Component {
   };
 
   static defaultProps = {
-    loading: true,
+    loading: false,
   };
 
   state = {
