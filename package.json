@@ -1,8 +1,11 @@
 {
   "name": "@loganasherjones/beer-table",
-  "version": "0.1.0",
+  "version": "0.1.1-alpha1",
   "description": "MUI Tables for Beer Garden",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "cross-env NODE_ENV=production npm run prettier && rollup -c",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
